@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard - {{ currentMonth }}{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <h2>Summary for {{ currentMonth }}</h2>
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+            <div>
+                <p><strong>Total Pool Spent:</strong> ${{ summary.totalSpent|number_format(2) }}</p>
+                <p><strong>User A Spent:</strong> ${{ summary.user1Spent|number_format(2) }}</p>
+                <p><strong>User B Spent:</strong> ${{ summary.user2Spent|number_format(2) }}</p>
+            </div>
+            <div style="text-align: right;">
+                {% if summary.isSettled %}
+                    <h3 style="color: green;">All Settled!</h3>
+                {% else %}
+                    <h3>
+                        User {% if summary.debtorId == 1 %}A{% else %}B{% endif %} owes 
+                        User {% if summary.creditorId == 1 %}A{% else %}B{% endif %}:
+                    </h3>
+                    <h2 style="color: var(--mdc-theme-secondary);">${{ summary.netOwedAmount|number_format(2) }}</h2>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Quick Add Expense</h2>
+        <form action="{{ path('app_expense_add') }}" method="post">
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 8px;">Title</label>
+                <input type="text" name="title" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+            </div>
+            <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                <div style="flex: 1;">
+                    <label style="display: block; margin-bottom: 8px;">Amount ($)</label>
+                    <input type="number" name="amount" step="0.01" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+                <div style="flex: 1;">
+                    <label style="display: block; margin-bottom: 8px;">Paid By</label>
+                    <select name="paid_by_id" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                        <option value="1">User A</option>
+                        <option value="2">User B</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                <div style="flex: 1;">
+                    <label style="display: block; margin-bottom: 8px;">Date</label>
+                    <input type="date" name="date" value="{{ "now"|date("Y-m-d") }}" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+                <div style="flex: 1;">
+                    <label style="display: block; margin-bottom: 8px;">Split Ratio (Optional, default 0.50)</label>
+                    <input type="number" name="split_ratio" step="0.01" min="0" max="1" placeholder="0.50" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+            </div>
+            <button type="submit" class="mdc-button mdc-button--raised">Add Expense</button>
+        </form>
+    </div>
+{% endblock %}

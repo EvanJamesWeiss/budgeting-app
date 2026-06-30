@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Monthly Ledger - {{ monthYear }}{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <h2>Expenses for {{ monthYear }}</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid #eee; text-align: left;">
+                    <th style="padding: 12px;">Date</th>
+                    <th style="padding: 12px;">Title</th>
+                    <th style="padding: 12px;">Paid By</th>
+                    <th style="padding: 12px;">Amount</th>
+                    <th style="padding: 12px;">Split</th>
+                    <th style="padding: 12px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                    <tr style="border-bottom: 1px solid #eee;" class="{{ expense.isPlaceholder ? 'placeholder-row' : '' }}">
+                        <td style="padding: 12px;">{{ expense.date|date('Y-m-d') }}</td>
+                        <td style="padding: 12px;">{{ expense.title }}</td>
+                        <td style="padding: 12px;">{{ expense.paidBy.name }}</td>
+                        <td style="padding: 12px;">
+                            {% if expense.isPlaceholder %}
+                                <form action="{{ path('app_expense_update', {id: expense.id}) }}" method="post" style="display: flex; gap: 8px;">
+                                    <input type="number" name="amount" step="0.01" required style="width: 80px; padding: 4px;">
+                                    <button type="submit" class="mdc-button mdc-button--raised" style="height: 28px; font-size: 12px;">Save</button>
+                                </form>
+                            {% else %}
+                                ${{ expense.amount|number_format(2) }}
+                            {% endif %}
+                        </td>
+                        <td style="padding: 12px;">{{ (expense.splitRatio * 100)|number_format(0) }}%</td>
+                        <td style="padding: 12px;">
+                            {% if expense.isPlaceholder %}
+                                <span style="color: #f57c00; font-weight: 500;">Placeholder</span>
+                            {% else %}
+                                <span style="color: green;">Confirmed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>Month Summary & Settlement</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <p><strong>Total Pool Spent:</strong> ${{ summary.totalSpent|number_format(2) }}</p>
+                {% if summary.isSettled %}
+                    <h3 style="color: green;">Status: Fully Settled</h3>
+                {% else %}
+                    <h3 style="color: var(--mdc-theme-secondary);">
+                        Status: User {% if summary.debtorId == 1 %}A{% else %}B{% endif %} owes ${{ summary.netOwedAmount|number_format(2) }}
+                    </h3>
+                {% endif %}
+            </div>
+            {% if not summary.isSettled %}
+                <div>
+                    <form action="{{ path('app_settlement_log') }}" method="post" style="display: flex; align-items: center; gap: 16px;">
+                        <input type="hidden" name="monthYear" value="{{ monthYear }}">
+                        <input type="hidden" name="paid_by_id" value="{{ summary.debtorId }}">
+                        <input type="hidden" name="amount" value="{{ summary.netOwedAmount }}">
+                        <p style="margin: 0;">Mark as paid back?</p>
+                        <button type="submit" class="mdc-button mdc-button--raised">Mark as Settled</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

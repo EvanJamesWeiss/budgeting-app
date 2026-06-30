@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}All-Time Balance{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <h2>Unsettled Months</h2>
+        {% if summaries|length > 0 %}
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #eee; text-align: left;">
+                        <th style="padding: 12px;">Month</th>
+                        <th style="padding: 12px;">Status</th>
+                        <th style="padding: 12px;">Amount</th>
+                        <th style="padding: 12px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for summary in summaries %}
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 12px;">{{ summary.monthYear }}</td>
+                            <td style="padding: 12px;">
+                                User {% if summary.debtorId == 1 %}A{% else %}B{% endif %} owes User {% if summary.creditorId == 1 %}A{% else %}B{% endif %}
+                            </td>
+                            <td style="padding: 12px; font-weight: bold; color: var(--mdc-theme-secondary);">
+                                ${{ summary.netOwedAmount|number_format(2) }}
+                            </td>
+                            <td style="padding: 12px;">
+                                <a href="{{ path('app_ledger', {monthYear: summary.monthYear}) }}" class="mdc-button mdc-button--raised" style="text-decoration: none; font-size: 12px; height: 28px;">View Ledger</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p style="color: green; font-weight: bold;">Everything is settled! Good job!</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2>Total Debt Summary</h2>
+        {% set totalUserA_owes = 0 %}
+        {% set totalUserB_owes = 0 %}
+        {% for summary in summaries %}
+            {% if summary.debtorId == 1 %}
+                {% set totalUserA_owes = totalUserA_owes + summary.netOwedAmount %}
+            {% else %}
+                {% set totalUserB_owes = totalUserB_owes + summary.netOwedAmount %}
+            {% endif %}
+        {% endfor %}
+
+        <div style="display: flex; gap: 40px;">
+            <div>
+                <h3>User A Total Owed:</h3>
+                <h2 style="color: {% if totalUserA_owes > 0 %}var(--mdc-theme-secondary){% else %}green{% endif %}">${{ totalUserA_owes|number_format(2) }}</h2>
+            </div>
+            <div>
+                <h3>User B Total Owed:</h3>
+                <h2 style="color: {% if totalUserB_owes > 0 %}var(--mdc-theme-secondary){% else %}green{% endif %}">${{ totalUserB_owes|number_format(2) }}</h2>
+            </div>
+        </div>
+    </div>
+{% endblock %}

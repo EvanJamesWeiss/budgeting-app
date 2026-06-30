@@ -2,12 +2,101 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Shared Budgeting App{% endblock %}</title>
+
+    <!-- Material UI Fonts & Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+
+    <!-- Material Design Components Web -->
+    <link href="https://cdn.jsdelivr.net/npm/material-components-web@14.0.0/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+
+    <style>
+        :root {
+            --mdc-theme-primary: #1976d2;
+            --mdc-theme-secondary: #dc004e;
+        }
+        body {
+            margin: 0;
+            font-family: Roboto, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .app-bar {
+            background-color: var(--mdc-theme-primary);
+            color: white;
+            padding: 0 16px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .app-bar h1 {
+            font-size: 20px;
+            margin: 0;
+            flex-grow: 1;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+        .container {
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .placeholder-row {
+            background-color: #fff8e1 !important;
+        }
+        .mdc-button {
+            height: 36px;
+            padding: 0 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            text-transform: uppercase;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mdc-button--raised {
+            background-color: var(--mdc-theme-primary);
+            color: white;
+        }
+    </style>
 
     {# This line is crucial for AssetMapper & Stimulus #}
     {{ importmap('app') }}
 </head>
 <body>
-{% block body %}{% endblock %}
+    <header class="app-bar">
+        <h1>Budgeting App</h1>
+        <nav class="nav-links">
+            <a href="{{ path('app_dashboard') }}">Dashboard</a>
+            <a href="{{ path('app_ledger') }}">Monthly Ledger</a>
+            <a href="{{ path('app_all_time') }}">All-Time Balance</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% block body %}{% endblock %}
+    </main>
+
+    <script>
+        window.mdc.autoInit();
+    </script>
 </body>
 </html>
