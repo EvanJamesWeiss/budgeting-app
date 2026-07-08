@@ -5,16 +5,24 @@ namespace App\Service;
 use App\Dto\MonthSummaryDto;
 use App\Repository\ExpenseRepository;
 use App\Repository\SettlementRepository;
+use App\Repository\UserRepository;
 
 class LedgerService
 {
     public function __construct(
         private ExpenseRepository $expenseRepository,
-        private SettlementRepository $settlementRepository
+        private SettlementRepository $settlementRepository,
+        private UserRepository $userRepository
     ) {}
 
     public function calculateMonthSummary(string $monthYear): MonthSummaryDto
     {
+        $user1 = $this->userRepository->find(1);
+        $user2 = $this->userRepository->find(2);
+
+        $user1Name = $user1 ? $user1->getName() : 'User 1';
+        $user2Name = $user2 ? $user2->getName() : 'User 2';
+
         // 1. Fetch expenses
         // monthYear format is YYYY-MM
         $startDate = new \DateTimeImmutable($monthYear . '-01 00:00:00');
@@ -76,12 +84,19 @@ class LedgerService
         $creditorId = null;
         $netOwedAmount = abs($netBalance);
 
+        $debtorName = null;
+        $creditorName = null;
+
         if ($netBalance > 0.001) {
             $debtorId = 2;
             $creditorId = 1;
+            $debtorName = $user2Name;
+            $creditorName = $user1Name;
         } elseif ($netBalance < -0.001) {
             $debtorId = 1;
             $creditorId = 2;
+            $debtorName = $user1Name;
+            $creditorName = $user2Name;
         }
 
         $isSettled = $netOwedAmount < 0.001;
@@ -94,7 +109,11 @@ class LedgerService
             netOwedAmount: $netOwedAmount,
             debtorId: $debtorId,
             creditorId: $creditorId,
-            isSettled: $isSettled
+            debtorName: $debtorName,
+            creditorName: $creditorName,
+            isSettled: $isSettled,
+            user1Name: $user1Name,
+            user2Name: $user2Name
         );
     }
 

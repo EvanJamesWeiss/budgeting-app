@@ -8,16 +8,16 @@
         <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
             <div>
                 <p><strong>Total Pool Spent:</strong> ${{ summary.totalSpent|number_format(2) }}</p>
-                <p><strong>User A Spent:</strong> ${{ summary.user1Spent|number_format(2) }}</p>
-                <p><strong>User B Spent:</strong> ${{ summary.user2Spent|number_format(2) }}</p>
+                <p><strong>{{ summary.user1Name }} Spent:</strong> ${{ summary.user1Spent|number_format(2) }}</p>
+                <p><strong>{{ summary.user2Name }} Spent:</strong> ${{ summary.user2Spent|number_format(2) }}</p>
             </div>
             <div style="text-align: right;">
                 {% if summary.isSettled %}
                     <h3 style="color: green;">All Settled!</h3>
                 {% else %}
                     <h3>
-                        User {% if summary.debtorId == 1 %}A{% else %}B{% endif %} owes 
-                        User {% if summary.creditorId == 1 %}A{% else %}B{% endif %}:
+                        {{ summary.debtorName }} owes 
+                        {{ summary.creditorName }}:
                     </h3>
                     <h2 style="color: var(--mdc-theme-secondary);">${{ summary.netOwedAmount|number_format(2) }}</h2>
                 {% endif %}
@@ -40,8 +40,8 @@
                 <div style="flex: 1;">
                     <label style="display: block; margin-bottom: 8px;">Paid By</label>
                     <select name="paid_by_id" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                        <option value="1">User A</option>
-                        <option value="2">User B</option>
+                        <option value="1">{{ summary.user1Name }}</option>
+                        <option value="2">{{ summary.user2Name }}</option>
                     </select>
                 </div>
             </div>

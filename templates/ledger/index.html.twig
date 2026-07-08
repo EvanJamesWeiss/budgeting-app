@@ -55,7 +55,7 @@
                     <h3 style="color: green;">Status: Fully Settled</h3>
                 {% else %}
                     <h3 style="color: var(--mdc-theme-secondary);">
-                        Status: User {% if summary.debtorId == 1 %}A{% else %}B{% endif %} owes ${{ summary.netOwedAmount|number_format(2) }}
+                        Status: {{ summary.debtorName }} owes ${{ summary.netOwedAmount|number_format(2) }}
                     </h3>
                 {% endif %}
             </div>

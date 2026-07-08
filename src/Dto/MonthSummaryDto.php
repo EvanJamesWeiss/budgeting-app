@@ -12,6 +12,10 @@ readonly class MonthSummaryDto
         public float $netOwedAmount,
         public ?int $debtorId,
         public ?int $creditorId,
-        public bool $isSettled
+        public ?string $debtorName,
+        public ?string $creditorName,
+        public bool $isSettled,
+        public string $user1Name,
+        public string $user2Name
     ) {}
 }

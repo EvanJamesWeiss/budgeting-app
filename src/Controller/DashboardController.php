@@ -20,8 +20,6 @@ class DashboardController extends AbstractController
         return $this->render('dashboard/index.html.twig', [
             'summary' => $summary,
             'currentMonth' => $currentMonth,
-            'user1Id' => 1,
-            'user2Id' => 2,
         ]);
     }
 }
