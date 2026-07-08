@@ -17,14 +17,34 @@
         :root {
             --mdc-theme-primary: #1976d2;
             --mdc-theme-secondary: #dc004e;
+            --bg-color: #f5f5f5;
+            --surface-color: #ffffff;
+            --text-primary: #000000;
+            --text-secondary: #666666;
+            --border-color: #eeeeee;
+            --input-bg: #ffffff;
+            --app-bar-bg: var(--mdc-theme-primary);
         }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --text-primary: #ffffff;
+            --text-secondary: #bbbbbb;
+            --border-color: #333333;
+            --input-bg: #2c2c2c;
+            --app-bar-bg: #272727;
+        }
+
         body {
             margin: 0;
             font-family: Roboto, sans-serif;
-            background-color: #f5f5f5;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
         }
+
         .app-bar {
-            background-color: var(--mdc-theme-primary);
+            background-color: var(--app-bar-bg);
             color: white;
             padding: 0 16px;
             height: 64px;
@@ -32,11 +52,13 @@
             align-items: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         .app-bar h1 {
             font-size: 20px;
             margin: 0;
             flex-grow: 1;
         }
+
         .nav-links a {
             color: white;
             text-decoration: none;
@@ -45,21 +67,35 @@
             text-transform: uppercase;
             font-size: 14px;
         }
+
         .container {
             padding: 24px;
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .card {
-            background: white;
+            background: var(--surface-color);
             border-radius: 4px;
             box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
             padding: 16px;
             margin-bottom: 24px;
+            color: var(--text-primary);
         }
+
         .placeholder-row {
+            background-color: rgba(255, 248, 225, 0.1) !important;
+        }
+
+        [data-theme="light"] .placeholder-row {
+             background-color: #fff8e1 !important;
+        }
+        
+        /* Default for when no theme is set yet */
+        :root:not([data-theme="dark"]) .placeholder-row {
             background-color: #fff8e1 !important;
         }
+
         .mdc-button {
             height: 36px;
             padding: 0 16px;
@@ -72,11 +108,22 @@
             align-items: center;
             justify-content: center;
         }
+
         .mdc-button--raised {
             background-color: var(--mdc-theme-primary);
             color: white;
         }
     </style>
+
+    {# Inline script to prevent FOUC #}
+    <script>
+        (function() {
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 
     {# This line is crucial for AssetMapper & Stimulus #}
     {{ importmap('app') }}
@@ -89,6 +136,9 @@
             <a href="{{ path('app_ledger') }}">Monthly Ledger</a>
             <a href="{{ path('app_all_time') }}">All-Time Balance</a>
         </nav>
+        <button id="theme-toggle" class="mdc-icon-button material-icons" style="color: white; margin-left: 16px; background: none; border: none; cursor: pointer; font-size: 24px;">
+            dark_mode
+        </button>
     </header>
 
     <main class="container">
@@ -97,6 +147,28 @@
 
     <script>
         window.mdc.autoInit();
+
+        (function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const currentTheme = localStorage.getItem('theme') || 'light';
+
+            if (currentTheme === 'dark') {
+                themeToggle.textContent = 'light_mode';
+            }
+
+            themeToggle.addEventListener('click', () => {
+                let theme = document.documentElement.getAttribute('data-theme');
+                if (theme === 'dark') {
+                    document.documentElement.removeAttribute('data-theme');
+                    themeToggle.textContent = 'dark_mode';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    themeToggle.textContent = 'light_mode';
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        })();
     </script>
 </body>
 </html>

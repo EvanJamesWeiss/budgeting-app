@@ -7,7 +7,7 @@
         <h2>Expenses for {{ monthYear }}</h2>
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
-                <tr style="border-bottom: 2px solid #eee; text-align: left;">
+                <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
                     <th style="padding: 12px;">Date</th>
                     <th style="padding: 12px;">Title</th>
                     <th style="padding: 12px;">Paid By</th>
@@ -18,14 +18,14 @@
             </thead>
             <tbody>
                 {% for expense in expenses %}
-                    <tr style="border-bottom: 1px solid #eee;" class="{{ expense.isPlaceholder ? 'placeholder-row' : '' }}">
+                    <tr style="border-bottom: 1px solid var(--border-color);" class="{{ expense.isPlaceholder ? 'placeholder-row' : '' }}">
                         <td style="padding: 12px;">{{ expense.date|date('Y-m-d') }}</td>
                         <td style="padding: 12px;">{{ expense.title }}</td>
                         <td style="padding: 12px;">{{ expense.paidBy.name }}</td>
                         <td style="padding: 12px;">
                             {% if expense.isPlaceholder %}
                                 <form action="{{ path('app_expense_update', {id: expense.id}) }}" method="post" style="display: flex; gap: 8px;">
-                                    <input type="number" name="amount" step="0.01" required style="width: 80px; padding: 4px;">
+                                    <input type="number" name="amount" step="0.01" required style="width: 80px; padding: 4px; border: 1px solid var(--border-color); background-color: var(--input-bg); color: var(--text-primary);">
                                     <button type="submit" class="mdc-button mdc-button--raised" style="height: 28px; font-size: 12px;">Save</button>
                                 </form>
                             {% else %}

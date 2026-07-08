@@ -8,7 +8,7 @@
         {% if summaries|length > 0 %}
             <table style="width: 100%; border-collapse: collapse;">
                 <thead>
-                    <tr style="border-bottom: 2px solid #eee; text-align: left;">
+                    <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
                         <th style="padding: 12px;">Month</th>
                         <th style="padding: 12px;">Status</th>
                         <th style="padding: 12px;">Amount</th>
@@ -17,7 +17,7 @@
                 </thead>
                 <tbody>
                     {% for summary in summaries %}
-                        <tr style="border-bottom: 1px solid #eee;">
+                        <tr style="border-bottom: 1px solid var(--border-color);">
                             <td style="padding: 12px;">{{ summary.monthYear }}</td>
                             <td style="padding: 12px;">
                                 {{ summary.debtorName }} owes {{ summary.creditorName }}

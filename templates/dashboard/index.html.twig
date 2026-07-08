@@ -30,16 +30,16 @@
         <form action="{{ path('app_expense_add') }}" method="post">
             <div style="margin-bottom: 16px;">
                 <label style="display: block; margin-bottom: 8px;">Title</label>
-                <input type="text" name="title" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                <input type="text" name="title" required style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--input-bg); color: var(--text-primary);">
             </div>
             <div style="display: flex; gap: 16px; margin-bottom: 16px;">
                 <div style="flex: 1;">
                     <label style="display: block; margin-bottom: 8px;">Amount ($)</label>
-                    <input type="number" name="amount" step="0.01" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                    <input type="number" name="amount" step="0.01" required style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--input-bg); color: var(--text-primary);">
                 </div>
                 <div style="flex: 1;">
                     <label style="display: block; margin-bottom: 8px;">Paid By</label>
-                    <select name="paid_by_id" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                    <select name="paid_by_id" required style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--input-bg); color: var(--text-primary);">
                         <option value="1">{{ summary.user1Name }}</option>
                         <option value="2">{{ summary.user2Name }}</option>
                     </select>
@@ -48,11 +48,11 @@
             <div style="display: flex; gap: 16px; margin-bottom: 16px;">
                 <div style="flex: 1;">
                     <label style="display: block; margin-bottom: 8px;">Date</label>
-                    <input type="date" name="date" value="{{ "now"|date("Y-m-d") }}" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                    <input type="date" name="date" value="{{ "now"|date("Y-m-d") }}" required style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--input-bg); color: var(--text-primary);">
                 </div>
                 <div style="flex: 1;">
                     <label style="display: block; margin-bottom: 8px;">Split Ratio (Optional, default 0.50)</label>
-                    <input type="number" name="split_ratio" step="0.01" min="0" max="1" placeholder="0.50" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                    <input type="number" name="split_ratio" step="0.01" min="0" max="1" placeholder="0.50" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--input-bg); color: var(--text-primary);">
                 </div>
             </div>
             <button type="submit" class="mdc-button mdc-button--raised">Add Expense</button>
