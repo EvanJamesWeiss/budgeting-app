@@ -14,7 +14,6 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
@@ -33,17 +32,11 @@ class RecurringPaymentType extends AbstractType
             ->add('defaultAmount', NumberType::class, [
                 'required' => false,
                 'scale' => 2,
-                'constraints' => [
-                    new GreaterThanOrEqual(value: 0, message: 'Amount must be 0 or greater.'),
-                ],
             ])
             ->add('isStatic', ChoiceType::class, [
                 'choices' => [
                     'Fixed' => true,
                     'Variable' => false,
-                ],
-                'constraints' => [
-                    new NotBlank(message: 'Payment type is required.'),
                 ],
             ])
             ->add('paidBy', EntityType::class, [
@@ -77,6 +70,12 @@ class RecurringPaymentType extends AbstractType
             if ($isStatic === true && ($defaultAmount === null || $defaultAmount === '')) {
                 $form->get('defaultAmount')->addError(
                     new FormError('Amount is required for fixed recurring payments.')
+                );
+            }
+
+            if ($defaultAmount !== null && $defaultAmount !== '' && $defaultAmount < 0) {
+                $form->get('defaultAmount')->addError(
+                    new FormError('Amount must be 0 or greater.')
                 );
             }
         });
