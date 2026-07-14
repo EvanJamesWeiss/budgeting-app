@@ -4,8 +4,9 @@
 
 {% block body %}
     {% for message in app.flashes('success') %}
-        <div style="background-color: #e8f5e9; border: 1px solid #a5d6a7; color: #2e7d32; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
-            {{ message }}
+        <div style="background-color: #e8f5e9; border: 1px solid #a5d6a7; color: #2e7d32; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+            <span>{{ message }}</span>
+            <button type="button" onclick="this.parentElement.remove()" style="background: none; border: none; color: #2e7d32; font-size: 18px; font-weight: bold; cursor: pointer; line-height: 1; padding: 0 0 0 12px;" aria-label="Dismiss">&times;</button>
         </div>
     {% endfor %}
 
@@ -54,7 +55,13 @@
                             <td style="padding: 12px;">{{ template.paidBy.name }}</td>
                             <td style="padding: 12px;">
                                 {% set ratio = template.defaultSplitRatio %}
-                                {{ template.paidBy.name }} {{ (ratio * 100)|number_format(0) }}% – {{ (100 - ratio * 100)|number_format(0) }}%
+                                {% set otherUser = null %}
+                                {% for user in allUsers %}
+                                    {% if user.id != template.paidBy.id %}
+                                        {% set otherUser = user %}
+                                    {% endif %}
+                                {% endfor %}
+                                {{ template.paidBy.name }} {{ (ratio * 100)|number_format(0) }}% – {{ otherUser ? otherUser.name : 'Other' }} {{ (100 - ratio * 100)|number_format(0) }}%
                             </td>
                             <td style="padding: 12px;">
                                 {% if template.isStatic %}

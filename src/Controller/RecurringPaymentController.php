@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\ExpenseTemplate;
 use App\Form\RecurringPaymentType;
 use App\Repository\ExpenseTemplateRepository;
+use App\Repository\UserRepository;
 use App\Service\RecurringPaymentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class RecurringPaymentController extends AbstractController
 {
     #[Route('/recurring-payments', name: 'app_recurring_payments', methods: ['GET'])]
-    public function index(ExpenseTemplateRepository $templateRepository): Response
+    public function index(ExpenseTemplateRepository $templateRepository, UserRepository $userRepository): Response
     {
         $templates = $templateRepository->findAllActive();
         $createForm = $this->createForm(RecurringPaymentType::class, new ExpenseTemplate(), [
@@ -34,11 +35,12 @@ class RecurringPaymentController extends AbstractController
             'templates' => $templates,
             'createForm' => $createForm->createView(),
             'editForms' => $editForms,
+            'allUsers' => $userRepository->findAll(),
         ]);
     }
 
     #[Route('/recurring-payments/new', name: 'app_recurring_payments_create', methods: ['POST'])]
-    public function create(Request $request, ExpenseTemplateRepository $templateRepository, RecurringPaymentService $service): Response
+    public function create(Request $request, ExpenseTemplateRepository $templateRepository, UserRepository $userRepository, RecurringPaymentService $service): Response
     {
         $template = new ExpenseTemplate();
         $form = $this->createForm(RecurringPaymentType::class, $template);
@@ -64,11 +66,12 @@ class RecurringPaymentController extends AbstractController
             'templates' => $templates,
             'createForm' => $form->createView(),
             'editForms' => $editForms,
+            'allUsers' => $userRepository->findAll(),
         ]);
     }
 
     #[Route('/recurring-payments/{id}/edit', name: 'app_recurring_payments_edit', methods: ['POST'])]
-    public function edit(int $id, Request $request, ExpenseTemplateRepository $templateRepository, RecurringPaymentService $service): Response
+    public function edit(int $id, Request $request, ExpenseTemplateRepository $templateRepository, UserRepository $userRepository, RecurringPaymentService $service): Response
     {
         $template = $templateRepository->find($id);
         if (!$template) {
@@ -104,6 +107,7 @@ class RecurringPaymentController extends AbstractController
             ])->createView(),
             'editForms' => $editForms,
             'activeEditId' => $template->getId(),
+            'allUsers' => $userRepository->findAll(),
         ]);
     }
 

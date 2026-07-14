@@ -27,7 +27,7 @@
 
     <div style="flex: 1; min-width: 140px;">
         <label style="display: block; margin-bottom: 8px;">Default Amount ($)</label>
-        {{ form_widget(form.defaultAmount, {'attr': {'style': 'width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--input-bg); color: var(--text-primary);', 'step': '0.01', 'min': '0', 'placeholder': '0.00'}}) }}
+        {{ form_widget(form.defaultAmount, {'attr': {'style': 'width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--input-bg); color: var(--text-primary);', 'step': '0.01', 'min': '0', 'placeholder': 'e.g. 1200.00', 'class': 'rp-amount-input', 'onblur': 'formatDecimalInput(this, 2)'}}) }}
         {% if form.defaultAmount.vars.errors|length > 0 %}
             <ul style="color: red; margin: 4px 0 0; padding: 0; list-style: none; font-size: 12px;">
                 {% for error in form.defaultAmount.vars.errors %}
@@ -51,7 +51,7 @@
 
     <div style="flex: 1; min-width: 140px;">
         <label style="display: block; margin-bottom: 8px;">Split Ratio (0.00–1.00)</label>
-        {{ form_widget(form.defaultSplitRatio, {'attr': {'style': 'width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--input-bg); color: var(--text-primary);', 'step': '0.01', 'min': '0', 'max': '1', 'placeholder': '0.75'}}) }}
+        {{ form_widget(form.defaultSplitRatio, {'attr': {'style': 'width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--input-bg); color: var(--text-primary);', 'step': '0.01', 'min': '0', 'max': '1', 'placeholder': 'e.g. 0.75', 'onblur': 'formatDecimalInput(this, 2)'}}) }}
         {% if form.defaultSplitRatio.vars.errors|length > 0 %}
             <ul style="color: red; margin: 4px 0 0; padding: 0; list-style: none; font-size: 12px;">
                 {% for error in form.defaultSplitRatio.vars.errors %}
@@ -65,3 +65,12 @@
 <button type="submit" class="mdc-button mdc-button--raised">{{ submitLabel|default('Save') }}</button>
 
 {{ form_end(form) }}
+
+<script>
+function formatDecimalInput(input, decimals) {
+    var val = parseFloat(input.value);
+    if (!isNaN(val)) {
+        input.value = val.toFixed(decimals);
+    }
+}
+</script>
