@@ -15,4 +15,13 @@ class ExpenseTemplateRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, ExpenseTemplate::class);
     }
+
+    public function findAllActive(): array
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.deletedAt IS NULL')
+            ->orderBy('t.title', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

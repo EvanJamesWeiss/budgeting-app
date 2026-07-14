@@ -5,22 +5,27 @@ namespace App\Service;
 use App\Entity\Expense;
 use App\Repository\ExpenseRepository;
 use App\Repository\ExpenseTemplateRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
-class ExpenseGenerationService
+readonly class ExpenseGenerationService
 {
     public function __construct(
         private ExpenseTemplateRepository $templateRepository,
-        private ExpenseRepository $expenseRepository,
-        private EntityManagerInterface $entityManager
+        private ExpenseRepository         $expenseRepository,
+        private EntityManagerInterface    $entityManager
     ) {}
 
+    /**
+     * @throws Exception
+     */
     public function generateMonthlyPlaceholders(string $monthYear): void
     {
-        $startDate = new \DateTimeImmutable($monthYear . '-01 00:00:00');
+        $startDate = new DateTimeImmutable($monthYear . '-01 00:00:00');
         $endDate = $startDate->modify('last day of this month 23:59:59');
 
-        $templates = $this->templateRepository->findAll();
+        $templates = $this->templateRepository->findAllActive();
 
         foreach ($templates as $template) {
             // Check if expense already exists for this template in this month

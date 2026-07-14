@@ -30,6 +30,9 @@ class ExpenseTemplate
     #[ORM\Column(type: Types::DECIMAL, precision: 3, scale: 2)]
     private ?string $defaultSplitRatio = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deletedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,6 +94,18 @@ class ExpenseTemplate
     public function setDefaultSplitRatio(string $defaultSplitRatio): static
     {
         $this->defaultSplitRatio = $defaultSplitRatio;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+
+    public function softDelete(): static
+    {
+        $this->deletedAt = new \DateTimeImmutable();
 
         return $this;
     }
